@@ -21,7 +21,7 @@ io.on('connection', function(socket){
         accounts.loginUser(msg.username, socket.id).then( (res) => 
         {
             console.log(res)
-            io.to(socket.id).emit( "auth", { action : 'success', messages : recentMessages } )  
+            io.to(socket.id).emit( "auth", { action : 'success', user : res } )  
         
         }) .catch ( (res) => 
         {
@@ -37,6 +37,9 @@ io.on('connection', function(socket){
     //CHAT -------
     socket.on('chat', function(msg){})
 });
+
+conversation.sendMessage("5801bfca42755d047e89e1a6", "5801d0be49d68d112031fe58", "msg")
+
 
 //accounts.dbTest().then( function(reason){} );
 
