@@ -6,15 +6,30 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; left: 0; right: 150px; }
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      form button { width: 9%; background: black; color: white; border: none; padding: 10px; cursor: pointer}
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
+      .sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 150px; border-left: 2px solid #eee;  }
+      .sidebar li { padding: 20px; list-style-type: none; border-bottom: 1px #fafafa solid; cursor: pointer;}
+      .sidebar li:hover { background-color: #fafafa;}
+      .sidebar li:active { background-color: #e0e0e0;}
+      #conversation-list { position: absolute; top: 0; left: 0; right: 0; max-height: 50%; }
+      #user-list { position: absolute; bottom: 0; left: 0; right: 0; max-height: 50%; border-top: 1px solid #eee;}
+      
     </style>
   </head>
   <body>
+    <section class="sidebar">
+        <ul id="conversation-list">
+         <li><b>Conversations</b></li> 
+        </ul>
+        <ul id="user-list">
+          <li><b>Contacts</b></li> 
+        </ul>
+    </section>
     <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
@@ -23,6 +38,75 @@
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       var socket = io("localhost:3000/");
+      var auth
+      var conversations
+      var users
+      var username = "david"
+
+      
+
+
+
+      socket.on( "auth"  , function(msg){
+        switch (msg.action) {
+            case 'login':
+              socket.emit( "auth", { 'username' : username} )
+              console.log('sending login')
+              break;
+
+            case 'success':
+              console.log('logged in')
+              auth = msg.user.account
+              conversations = msg.user.conversations
+              users = msg.user.users
+
+              populateUserList()
+              populateConvoList()
+
+              console.log(auth)
+              console.log(conversations)
+              console.log(users)
+
+              break;  
+            
+            case 'failure':
+              console.log('bad credentials')
+              break;
+        }
+      })
+
+      function populateConvoList(){
+        var list = $('#conversation-list')
+       for (let i = 0; i < conversations.length ; i++ ) {
+          var convoSubject = subject(conversations[i].users)
+          list.append('<li var="' + conversations[i]._id + '">' + convoSubject + '</li>')
+        } 
+      }
+
+      function subject(userlist){
+        for (let i2 = 0 ; i2 < userlist.length ; i2++){
+            if ( userlist[i2] != auth._id ){
+              return whois(userlist[i2])
+            }
+          }
+      }
+
+      function whois(id){
+        for (let i3 = 0; i3 < users.length ; i3++ ) {
+          if (users[i3]._id == id) {
+            return users[i3].username
+          } 
+        }
+      }
+
+      function populateUserList(){
+        var list = $('#user-list')
+        for ( i = 0; i < users.length ; i++ ) {
+          list.append('<li var="' + users[i]._id + '">' + users[i].username + '</li>')
+        } 
+      }
+
+
 
       // when you click submit
       $('form').submit(function(){
@@ -33,24 +117,7 @@
         return false;
       });
 
-      socket.on( "auth"  , function(msg){
-        console.log(msg.action)
-        switch (msg.action) {
-            case 'login':
-              socket.emit( "auth", { username : "david"} )
-              console.log('sending login')
-              break;
 
-            case 'success':
-              console.log('logged in')
-              console.log(msg)
-              break;  
-            
-            case 'failure':
-              console.log('bad credentials')
-              break;
-        }
-      })
       //listener for messages named "chat message"
       socket.on('chat message', function(msg){
           //append the value of msg within the callback

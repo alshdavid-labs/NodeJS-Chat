@@ -30,6 +30,9 @@ io.on('connection', function(socket){
         })
     })
 
+    //WHOIS -------
+    socket.on('whois', function(msg){})
+
     //MESSAGE -------
     socket.on('msg', function(msg){})
 
@@ -38,8 +41,9 @@ io.on('connection', function(socket){
     socket.on('chat', function(msg){})
 });
 
-conversation.sendMessage("5801bfca42755d047e89e1a6", "5801d0be49d68d112031fe58", "msg")
+//conversation.sendMessage("5801bfca42755d047e89e1a6", "5801d0be49d68d112031fe58", "msg")
 
+//conversation.sendMessage()
 
 //accounts.dbTest().then( function(reason){} );
 
