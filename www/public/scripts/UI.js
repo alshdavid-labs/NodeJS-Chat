@@ -1,51 +1,51 @@
-$('html').click(()=>{
+$('html').click(function(){
     $('#slidemenu').removeClass('open')
     $('#registerOverlay').removeClass('open')
     $('#loginOverlay').removeClass('open')
     $('#conversationDraw').removeClass('open')
 })
 
-$('#slidemenu').click((event)=>{
+$('#slidemenu').click( function(event){
     event.stopPropagation();
 })
 
-$('#slidemenu').on('click', 'li', (event)=>{
+$('#slidemenu').on('click', 'li', function(event){
     event.stopPropagation();
     $('#slidemenu').removeClass('open')
     $('#conversationDraw').removeClass('open')
 })
 
-$('#conversationDraw').on('click', 'h1', (event)=>{
+$('#conversationDraw').on('click', 'h1', function(event){
     $('#conversationDraw').toggleClass('open')
 })
 
-$('#conversationDraw').on('click', 'li', (event)=>{
+$('#conversationDraw').on('click', 'li', function(event){
     event.stopPropagation();
     $('#slidemenu').removeClass('open')
     $('#conversationDraw').removeClass('open')
 })
 
-$('#header').on('click', 'i', (event)=>{
+$('#header').on('click', 'i', function(event){
     event.stopPropagation();
     $('#slidemenu').addClass('open')
 })
 
-$('#registerOverlay').on('click', '.panel', (event)=>{
+$('#registerOverlay').on('click', '.panel', function(event){
     event.stopPropagation();
 })
 
-$('#loginOverlay').on('click', '.panel', (event)=>{
+$('#loginOverlay').on('click', '.panel', function(event){
     event.stopPropagation();
 })
 
-$('.loggedout').on('click', (event)=>{
+$('.loggedout').on('click', function(event){
     event.stopPropagation();
     $('#loginOverlay').addClass('open')
     $('#slidemenu').removeClass('open')
     $('#conversationDraw').removeClass('open')
 })
 
-$('#loginOverlay').on('click', '.registerButton',(event)=>{
+$('#loginOverlay').on('click', '.registerButton', function(event){
     $('#loginOverlay').removeClass('open')
     $('#registerOverlay').addClass('open')
 })
@@ -61,7 +61,7 @@ $('#user-list').on('click', 'li', function(){
     chatTo( $(this).html() )
 })
 
-$('#loginButton').on('click', (event)=>{
+$('#loginButton').on('click', function(event){
     event.stopPropagation();
     globalUsername = $('#loginOverlay .email').val()
     console.log(globalUsername)
@@ -69,7 +69,7 @@ $('#loginButton').on('click', (event)=>{
     $('#loginOverlay').removeClass('open')
 })
 
-$('#registerButton').on('click', (event)=>{
+$('#registerButton').on('click', function(event){
     event.stopPropagation();
     var email = $('#registerOverlay .email').val()
     var globalUsername = $('#registerOverlay .username').val()
