@@ -101,9 +101,10 @@ $(document).keypress(function(e) {
     if(e.which == 13) {
         if (loggedInState == true){
             sendMessage()
+            $('#m').val('');
+            return false;
         }
-    }
-    $('#m').val('');
+    }    
 });
 
 function removeLogin(){

@@ -78,9 +78,7 @@ function sendMessage(){  //--- Send Message
         $('#m').val('');
     } else {
         console.log('Enter Something')
-    }
-    
-    
+    }    
 }
 
 function socketCreateConvo(fromID, toIDs){  //--- Create Convo
