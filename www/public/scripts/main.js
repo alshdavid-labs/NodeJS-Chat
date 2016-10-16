@@ -6,6 +6,7 @@
         conversations = null
         users = null
         console.log(globalUsername)
+        clearAll()
       }
       pageInit()  
 

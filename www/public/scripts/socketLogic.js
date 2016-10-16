@@ -50,6 +50,13 @@ socket.on('convo', function(msg){ // ------------------on new convo
     login()
 })
 
+socket.on('refresh', function(msg){ // ------------------on refresh signal
+    console.log('refresh')
+    if (loggedInState == true) {
+        login()
+    }
+})
+
 socket.on('error', function(msg){ // ------------------on error
     console.log(msg)
 })
@@ -65,9 +72,15 @@ function sendMessage(){  //--- Send Message
         toConvo : currentConversation,
         message : $('#m').val()
     }       
-    console.log(letter)
-    socket.emit('msg', letter);
-    $('#m').val('');
+    if ($('#m').val().length > 0){
+        console.log(letter)
+        socket.emit('msg', letter);
+        $('#m').val('');
+    } else {
+        console.log('Enter Something')
+    }
+    
+    
 }
 
 function socketCreateConvo(fromID, toIDs){  //--- Create Convo

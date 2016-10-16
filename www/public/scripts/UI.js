@@ -72,8 +72,9 @@ $('#loginButton').on('click', (event)=>{
 $('#registerButton').on('click', (event)=>{
     event.stopPropagation();
     var email = $('#registerOverlay .email').val()
-    var username = $('#registerOverlay .username').val()
-    registerUser(email, username)
+    var globalUsername = $('#registerOverlay .username').val()
+    $('#loginOverlay .email').val(email)
+    registerUser(email, globalUsername)
     $('#registerOverlay').removeClass('open')
 })
 
