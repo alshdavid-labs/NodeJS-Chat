@@ -12,7 +12,7 @@ var accounts = new Accounts
 var conversation = new Conversation()
 
 io.on('connection', function(socket){ 
-    console.log('nu: ' + socket.id)
+    console.log('nu:       ' + socket.id)
     //on new connection ask for auth
     io.to(socket.id).emit( "auth", { action : "login" });
 
@@ -52,18 +52,21 @@ io.on('connection', function(socket){
 
     //CHAT -------
     socket.on('convo', function(msg){
-        console.log(msg)
+        //console.log(msg)
+        conversation.create(socket.id, msg.fromUser, msg.toUsers).then((res)=>{
+            io.to(socket.id).emit( "convo", { action : "new", conversation : res } )
+        }).catch((res)=>{
+            io.to(socket.id).emit( "error", { reason : res } )
+        })
     })
 
     //Session Killer ----
     socket.on('disconnect', function () {
-        console.log('ded: ' + socket.id)
+        console.log('ded:      ' + socket.id)
         accounts.removeSession(socket.id);
     });
  
 });
-
-
 
 
 //conversation.sendMessage()
