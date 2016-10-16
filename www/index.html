@@ -72,7 +72,7 @@
         socket.disconnect();
         socket.connect()
         username = $('#logininput').val()
-        socket.emit( "auth", { 'username' : username} ) // Move to sockets
+        socket.emit( "auth", { 'email' : username} ) // Move to sockets
         pageInit()
       }
 

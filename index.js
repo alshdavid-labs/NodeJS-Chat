@@ -17,17 +17,19 @@ io.on('connection', function(socket){
     io.to(socket.id).emit( "auth", { action : "login" });
 
     //AUTH ---------
-    //on a recieved auth message
     socket.on('auth', function(msg){
-        accounts.loginUser(msg.username, socket.id).then( (res) => 
-        {
-            //console.log(res)
+        accounts.loginUser(msg.email, socket.id).then( (res) => {
             io.to(socket.id).emit( "auth", { action : 'success', user : res } )  
-        
-        }) .catch ( (res) => 
-        {
+        }) .catch ( (res) => {
             io.to(socket.id).emit( "auth", { action : 'faliure', message : res.toString() } )
-        
+        })
+    })
+
+    //REGISTER ---------
+    socket.on('reg', function(msg){
+        accounts.createUser(msg.email, msg.username, socket.id).then( (res) => 
+        {
+            io.to(socket.id).emit( "auth", { action : 'success', user : res } )  
         })
     })
 
@@ -68,6 +70,7 @@ io.on('connection', function(socket){
  
 });
 
+accounts.createUser('alshD', 'alsh')
 
 //conversation.sendMessage()
 
