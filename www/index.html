@@ -6,53 +6,164 @@
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
       body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; left: 0; right: 150px; }
+      .user {position: fixed; right: 200px; left: 0; top: 0px; height: 40px; border-bottom: 1px #eee solid;}
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; left: 0; right: 200px; }
       form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       form button { width: 9%; background: black; color: white; border: none; padding: 10px; cursor: pointer}
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
-      .sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 150px; border-left: 2px solid #eee;  }
+      #messages { overflow-Y: scroll; list-style-type: none; margin: 0; padding: 0; position: fixed; right: 200px; left: 0; top: 40px; bottom: 41px;}
+      #messages li { padding: 5px 10px; float:left; clear: both; margin: 10px; border: 1px solid #eee; border-radius: 20px;}
+      .me {float: right !important; background: #eee;}
+      .sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 200px; border-left: 2px solid #eee;  }
       .sidebar li { padding: 20px; list-style-type: none; border-bottom: 1px #fafafa solid; cursor: pointer;}
+      .sidebar span { font-size: 10px; display: block; }
       .sidebar li:hover { background-color: #fafafa;}
       .sidebar li:active { background-color: #e0e0e0;}
-      #conversation-list { position: absolute; top: 0; left: 0; right: 0; max-height: 50%; }
-      #user-list { position: absolute; bottom: 0; left: 0; right: 0; max-height: 50%; border-top: 1px solid #eee;}
+      #conversation-list { overflow-Y: scroll; position: absolute; top: 0; left: 0; right: 0; height: 50%; }
+      #user-list { overflow-Y: scroll; position: absolute; bottom: 0; left: 0; right: 0; height: 50%; border-top: 1px solid #eee;}
       
     </style>
   </head>
   <body>
+    <div class="user">
+      <input id="logininput" type="text"><button onclick="login()">Login</button>  <button onclick="logout()">Logout</button> 
+      <input id="convoinput" type="text"><button onclick="openConvo()">Convo</button>  
+      <input id="chattoinput" type="text"><button onclick="chatTo()">Create Convo</button>
+    </div>
     <section class="sidebar">
         <ul id="conversation-list">
          <li><b>Conversations</b></li> 
         </ul>
         <ul id="user-list">
-          <li><b>Contacts</b></li> 
+          <li><b>Users</b></li> 
         </ul>
     </section>
     <ul id="messages"></ul>
     <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
+      <input  id="m" autocomplete="off" /><button type="button" onclick="sendMessage()">Send</button>
     </form>
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script>
       var socket = io("localhost:3000/");
-      var auth
-      var conversations
-      var users
-      var username = "david"
+      var chatArea = document.getElementById('messages')
+      var auth = null
+      var conversations = null
+      var users = null
+      var currentConversation = null
 
+      var username = "jack"  
+
+      function pageInit(){
+        $('#logininput').val(username)
+        $('#conversation-list').html('<li><b>Conversations</b></li> ')
+        $('#user-list').html('<li><b>Users</b></li> ')
+        $('#messages').html('')
+        auth = null
+        conversations = null
+        users = null
+      }
+      pageInit()
+
+
+      //LOGIC\/\/\/\/\/
+
+      //UI & Navigation ===================
+      function login(){
+        socket.disconnect();
+        socket.connect()
+        username = $('#logininput').val()
+        socket.emit( "auth", { 'username' : username} ) // Move to sockets
+        pageInit()
+      }
+
+      function logout(){
+        socket.disconnect();
+        pageInit()
+      }
+
+
+      function clearValues(){
+          $('#chattoinput').val('')
+          $('#convoinput').val('')
+      }
+
+      $('#user-list').on('click', 'li', function(){
+        clearValues()
+        $('#chattoinput').val( $(this).html() )
+      })
+
+      $('#conversation-list').on('click', 'li', function(){
+        clearValues()
+        $('#convoinput').val( $(this).attr('var') )
+        openConvo()
+      })
+
+      function populateUserList(){
+        var list = $('#user-list')
+        for ( i = 0; i < users.length ; i++ ) {
+          list.append('<li var="' + users[i]._id + '">' + users[i].username + '</li>')
+        } 
+      }
+
+      function openConvo(){
+          currentConversation = $('#convoinput').val()
+          for (let i = 0; i < conversations.length; i++){
+              if (conversations[i]._id == currentConversation){
+                renderConvo(conversations[i].messages)
+                return
+              }
+          }
+      }
+
+      function chatTo(){
+        var chatToStart = $('#chattoinput').val()
+        var id = getIdFromName(chatToStart)
+        startNewChat(id)
+      }
       
+      // UI Controllers ==========================
 
+      function renderConvo(messages){
+        var list = $('#messages')
+        list.html('')
+        for (let i = 0; i < messages.length; i++){          
+          if (messages[i].userID == auth._id){
+            list.append('<li class="me">' + messages[i].message + '</li>')
+          } else {
+            list.append('<li>' + messages[i].message + '</li>')
+          }
+          chatArea.scrollTop = chatArea.scrollHeight;
+        }
+        
+      }
 
+      function startNewChat(id){
+        console.log(id)
+      }
 
-      socket.on( "auth"  , function(msg){
-        switch (msg.action) {
-            case 'login':
-              socket.emit( "auth", { 'username' : username} )
-              console.log('sending login')
-              break;
+      //LOGIC =============================
+
+      function getIdFromName(name){
+        for (let i=0; i<users.length;i++){
+          if (users[i].username == name){
+            return users[i]._id
+          }
+        }
+        return false
+      }
+
+      function getNameFromId(id){
+        for (let i=0; i<users.length;i++){
+          if (users[i]._id == id){
+            return users[i].username
+          }
+        }
+        return false
+      }
+
+      //SOCKETS ============================
+      socket.on( "auth"  , function(msg){ //---------- Login
+        switch (msg.action) { 
 
             case 'success':
               console.log('logged in')
@@ -62,6 +173,10 @@
 
               populateUserList()
               populateConvoList()
+              renderConvo(conversations[0].messages)
+
+              currentConversation = conversations[0]._id
+              
 
               console.log(auth)
               console.log(conversations)
@@ -74,6 +189,43 @@
               break;
         }
       })
+          
+      socket.on('msg', function(msg){ //----------On new message
+          var list = $('#messages')
+          if (msg.fromUser == auth._id){
+            list.append('<li class="me" var="' + msg.fromUser + '">' + msg.message + '</li>')
+          } else {
+            list.append('<li class="" var="' + msg.fromUser + '">' + msg.message + '</li>')
+          }
+
+          addMessageToConversationData(msg.message, msg.toConvo, msg.fromUser)
+          chatArea.scrollTop = chatArea.scrollHeight;
+      });
+
+      function sendMessage(){  //--- Send Message
+        var letter = {
+            fromUser : auth._id,
+            toConvo : currentConversation,
+            message : $('#m').val()
+        }       
+        socket.emit('msg', letter);
+        $('#m').val('');
+      }
+
+      // Data Service =============
+      function addMessageToConversationData(message, convoID, userID){
+        for (let i = 0; i < conversations.length; i++){
+          if (conversations[i]._id == convoID){
+            conversations[i].messages.push({'message' : message, 'userID' : userID})
+          }
+        }
+      }
+
+
+
+
+      /// UGGHH gotta clean this ---------
+      // this determines who the conversation is with then appends it to the available conversations
 
       function populateConvoList(){
         var list = $('#conversation-list')
@@ -99,30 +251,11 @@
         }
       }
 
-      function populateUserList(){
-        var list = $('#user-list')
-        for ( i = 0; i < users.length ; i++ ) {
-          list.append('<li var="' + users[i]._id + '">' + users[i].username + '</li>')
-        } 
-      }
+      
 
+      
 
-
-      // when you click submit
-      $('form').submit(function(){
-        //send the value of the input field  
-        socket.emit('chat message', $('#m').val());
-        //clear the input filed for practicality 
-        $('#m').val('');
-        return false;
-      });
-
-
-      //listener for messages named "chat message"
-      socket.on('chat message', function(msg){
-          //append the value of msg within the callback
-          $('#messages').append($('<li>').text(msg));
-      });
+      
     </script>
   </body>
 </html>

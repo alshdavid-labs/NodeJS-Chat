@@ -12,6 +12,7 @@ var accounts = new Accounts
 var conversation = new Conversation()
 
 io.on('connection', function(socket){ 
+    console.log('nu: ' + socket.id)
     //on new connection ask for auth
     io.to(socket.id).emit( "auth", { action : "login" });
 
@@ -20,7 +21,7 @@ io.on('connection', function(socket){
     socket.on('auth', function(msg){
         accounts.loginUser(msg.username, socket.id).then( (res) => 
         {
-            console.log(res)
+            //console.log(res)
             io.to(socket.id).emit( "auth", { action : 'success', user : res } )  
         
         }) .catch ( (res) => 
@@ -30,18 +31,40 @@ io.on('connection', function(socket){
         })
     })
 
-    //WHOIS -------
-    socket.on('whois', function(msg){})
-
     //MESSAGE -------
-    socket.on('msg', function(msg){})
+    socket.on('msg', function(msg){
+        //console.log(msg)
+        conversation.newMessage(msg.fromUser, msg.toConvo, msg.message).then( (res) => {
+            //look through list of active socket sessions and send the message back out to them
+            for (let i = 0; i < res.length ; i++){
+                io.to(res[i]).emit( "msg", 
+                    { 
+                        action : 'new', 
+                        fromUser : msg.fromUser, 
+                        toConvo: msg.toConvo,  
+                        message : msg.message 
+                    }
+                )
+            }
+        }).catch(()=>{})
+    })
 
 
     //CHAT -------
-    socket.on('chat', function(msg){})
+    socket.on('convo', function(msg){
+
+    })
+
+    //Session Killer ----
+    socket.on('disconnect', function () {
+        console.log('ded: ' + socket.id)
+        accounts.removeSession(socket.id);
+    });
+ 
 });
 
-//conversation.sendMessage("5801bfca42755d047e89e1a6", "5801d0be49d68d112031fe58", "msg")
+
+
 
 //conversation.sendMessage()
 
