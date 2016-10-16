@@ -103,6 +103,7 @@ $(document).keypress(function(e) {
             sendMessage()
         }
     }
+    $('#m').val('');
 });
 
 function removeLogin(){
