@@ -138,7 +138,7 @@
       }
 
       function startNewChat(id){
-        console.log(id)
+        socketCreateConvo(auth._id, [id])
       }
 
       //LOGIC =============================
@@ -210,6 +210,14 @@
         }       
         socket.emit('msg', letter);
         $('#m').val('');
+      }
+
+      function socketCreateConvo(fromID, toIDs){  //--- Create Convo
+        var letter = {
+            fromUser : fromID,
+            toUsers : toIDs
+        }       
+        socket.emit('convo', letter);
       }
 
       // Data Service =============

@@ -52,7 +52,7 @@ io.on('connection', function(socket){
 
     //CHAT -------
     socket.on('convo', function(msg){
-
+        console.log(msg)
     })
 
     //Session Killer ----
