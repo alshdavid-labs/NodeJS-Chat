@@ -20,7 +20,7 @@ io.on('connection', function(socket){
     socket.on('auth', function(msg){
         accounts.loginUser(msg.email, socket.id).then( (res) => {
             io.to(socket.id).emit( "auth", { action : 'success', user : res } )  
-        }) .catch ( (res) => {
+        }).catch ( (res) => {
             io.to(socket.id).emit( "auth", { action : 'faliure', message : res.toString() } )
         })
     })
@@ -29,7 +29,9 @@ io.on('connection', function(socket){
     socket.on('reg', function(msg){
         accounts.createUser(msg.email, msg.username, socket.id).then( (res) => 
         {
-            io.to(socket.id).emit( "auth", { action : 'success', user : res } )  
+            io.to(socket.id).emit( "reg", { action : 'success', user : res } )  
+        }).catch ( (res) => {
+            io.to(socket.id).emit( "reg", { action : 'faliure', message : res.toString() } )
         })
     })
 
@@ -52,7 +54,7 @@ io.on('connection', function(socket){
     })
 
 
-    //CHAT -------
+    //CONVERSTION -------
     socket.on('convo', function(msg){
         //console.log(msg)
         conversation.create(socket.id, msg.fromUser, msg.toUsers).then((res)=>{
@@ -70,7 +72,7 @@ io.on('connection', function(socket){
  
 });
 
-accounts.createUser('alshD', 'alsh')
+//accounts.createUser('alshD2', 'alsh2')
 
 //conversation.sendMessage()
 

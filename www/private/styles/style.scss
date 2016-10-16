@@ -41,7 +41,7 @@ $chat-input-height: 100px;
         line-height: 60px;
         color: white;
         text-align: center;
-        font-weight: 100;
+        font-weight: 400;
     }
 
     i {
@@ -104,8 +104,9 @@ $chat-input-height: 100px;
 
         h1 {
             transition: all .25s;
-            &:active {
-                background-color: #eee;
+            background-color: $color-2;
+            color: black;
+            &:active {                
                 transition: all 0s; 
             }
         }
@@ -118,9 +119,19 @@ $chat-input-height: 100px;
 }
 
 .loggedout {
-    margin-top: 75px;
+    position: absolute;
+    top: $header-height;
+    bottom: $chat-input-height;
+    left: 0;
+    right: 0;
     text-align: center;
     color: #BDBDBD;
+    span {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
 }
 
 #message-list {

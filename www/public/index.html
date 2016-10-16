@@ -22,32 +22,30 @@
             </section>
             <section id="slidemenu" status="closed">
                 <h1>Conversations:</h1>
-                <ul>
-                    <li>one</li>
-                </ul>
+                <ul id="conversation-list"></ul>
                 <div id="conversationDraw">
                     <h1>Start New</h1>
-                    <ul>
-                        <li>one</li>
-                    </ul>
+                    <ul id="user-list"></ul>
                 </div>
             </section>
         </header>
 
         <div class="loggedout">
-            You are not logged in
-            <br>
-            Tap Here to login
+            <span>
+                You are not logged in.
+                <br>
+                Tap Here to login
+            </span>
         </div>
         
         <section id="message-list">            
-            <ul>
+            <ul id="messages">
                 
             </ul>
         </section> 
         <section id="post-input"> 
-            <textarea id="postInput" placeholder="Type your message"></textarea>
-            <button onclick="createPost()"><i class="material-icons">send</i></button>
+            <textarea id="m" placeholder="Type your message"></textarea>
+            <button onclick="sendMessage()"><i class="material-icons">send</i></button>
         </section>
 
         <footer>
@@ -55,25 +53,35 @@
  
         <section id="loginOverlay">
             <div class="panel">
-                <input type="text" placeholder="Email"> <br><br>
-                <input type="text" placeholder="Password (coming soon)" disabled> <br><br>
+                <input class="email" type="text" placeholder="Email"> <br><br>
+                <input class="password" type="text" placeholder="Password (coming soon)" disabled> <br><br>
                 <button id="loginButton">Login</button><button class="registerButton">Register</button>
             </div>
         </section>
 
         <section id="registerOverlay">
             <div class="panel">
-                <input type="text" placeholder="Email"> <br><br>
-                <input type="text" placeholder="Username"> <br><br>
-                <input type="text" placeholder="Password (coming soon)" disabled> <br><br>
+                <input class="email" type="text" placeholder="Email"> <br><br>
+                <input class="username" type="text" placeholder="Username"> <br><br>
+                <input class="password" type="text" placeholder="Password (coming soon)" disabled> <br><br>
                 <button id="registerButton">Register</button>
             </div>
         </section>
     
     </body>
     <scripts> 
+        <script>
+            var loggedInState
+            var chatArea = document.getElementById('message-list')
+            var auth = null
+            var conversations = null
+            var users = null
+            var currentConversation = null
+            var globalUsername = "david"  
+        </script>
         <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+  
         <script src="scripts/main.js"></script>
         <script src="scripts/UI.js"></script>
         <script src="scripts/socketLogic.js"></script>
