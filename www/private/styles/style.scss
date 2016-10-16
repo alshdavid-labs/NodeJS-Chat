@@ -1,0 +1,243 @@
+// Mixin Imports
+@import "lib/mappy";
+//
+// Mappy usage: @include mappy-bp(1000px) { rules : here; }
+
+
+// Variables  
+$page-width: 1050px;
+$tablet-width: 600px;
+
+$color-1: #2196F3;
+$color-2: #E3F2FD;
+
+$header-height: 60px;
+$chat-input-height: 100px;
+
+// Core Import
+@import "typography";
+
+// View Imports
+//@import "home";
+
+
+// Your SCSS goes below here
+
+#header {
+    background-color: $color-1;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: $header-height;
+    z-index: 98;
+
+    h1 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        line-height: 60px;
+        color: white;
+        text-align: center;
+        font-weight: 100;
+    }
+
+    i {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 50px;
+        line-height: 60px;
+        color: white;
+        font-size: 35px;
+        transition: all .25s;
+
+        &:active{opacity: .7; transition: all 0s;}
+    }
+}
+
+#slidemenu {
+    width: 280px;
+    display: block;
+    position: fixed;
+    right: -300px;
+    bottom: 0;
+    top: 0;
+    background-color: white;
+    box-shadow: 10px 0px 48px -16px rgba(0,0,0,0.55);
+    transition: all .25s;
+    z-index: 999;
+    &.open{
+        right: 0;
+    }
+
+    h1 {
+        text-align: center;
+        font-weight: 100;
+        line-height: 60px;
+        border-bottom: #eee solid 1px;
+    }
+
+    li {
+        padding-left: 40px;
+        font-weight: 100;
+        line-height: 50px;
+        transition: all .25s;
+        &:active {
+            background-color: #eee;
+            transition: all 0s; 
+        }
+    }
+
+    #conversationDraw{
+        position: absolute;
+        top: calc(100% - 60px);
+        left: 0;
+        right:0;
+        background-color: white;
+        border-top: #eee solid 1px;
+        border-bottom: none;
+        transition: all .25s;
+
+        h1 {
+            transition: all .25s;
+            &:active {
+                background-color: #eee;
+                transition: all 0s; 
+            }
+        }
+        
+        &.open{
+            top: 0;
+            border-top: none;
+        }
+    }
+}
+
+.loggedout {
+    margin-top: 75px;
+    text-align: center;
+    color: #BDBDBD;
+}
+
+#message-list {
+    position: absolute;
+    //top:$header-height;
+    max-height: calc(100% - #{$header-height});
+    left: 0;
+    bottom: $chat-input-height;
+    right: 0;
+    overflow-y: scroll;
+
+    li {
+        margin: 10px 20px 5px 20px;;
+        padding: 10px;
+        float: left;
+        clear: both;
+        background-color: $color-2;
+        border-radius: 20px;
+    }
+
+    .me {
+        background-color: $color-1;
+        color: white;
+        float: right;
+    }
+}
+
+#post-input {
+    border-top: 1px #eee solid;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: $chat-input-height;
+    background: white;
+
+    textarea {
+        padding: 15px;
+        position: absolute;
+        width: calc(100% - 106px);
+        top: 10px;
+        bottom: 10px;
+        left: 10px;
+        resize: none;
+        border: 1px solid $color-1;
+
+        &:focus { 
+            outline: none !important;
+            border-color: $color-1;
+            //box-shadow: 0 0 10px #719ECE;
+        }
+    }
+
+    button {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        bottom: 10px;
+        width: 55px;
+        background: $color-1; 
+        border: 1px $color-1 solid;
+        transition: opacity .25s;
+        &:active{
+            opacity: 0.7;
+            transition: opacity 0s;
+        }
+    }
+
+    .material-icons {
+        color: white;
+    }
+}
+
+#loginOverlay, #registerOverlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.4);
+    z-index: 9999;
+    visibility: hidden;
+
+    &.open {
+        visibility: visible;
+    }
+
+    .panel {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        padding: 50px;
+        background-color: white;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    input {
+        border: 1px solid $color-1; 
+        height: 25px;
+        padding: 5px;
+    }
+
+    button {
+        background-color: $color-1;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius:15px;
+        margin-right: 5px;
+    }
+
+    .close {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+}

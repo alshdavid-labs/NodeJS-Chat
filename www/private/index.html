@@ -1,0 +1,105 @@
+<!doctype html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <title>Alsh Chat</title>
+        
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700" rel="stylesheet">    
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        
+
+        <link rel="stylesheet" type="text/css" href="styles/style.css">
+    </head>
+    <body>
+
+        <header>
+            <section id="header">
+                <h1>Login</h1>
+                <i class="material-icons">dehaze</i>
+            </section>
+            <section id="slidemenu" status="closed">
+                <h1>Conversations:</h1>
+                <ul>
+                    <li>one</li>
+                </ul>
+                <div id="conversationDraw">
+                    <h1>Start New</h1>
+                    <ul>
+                        <li>one</li>
+                    </ul>
+                </div>
+            </section>
+        </header>
+
+        <div class="loggedout">
+            You are not logged in
+            <br>
+            Tap Here to login
+        </div>
+        
+        <section id="message-list">            
+            <ul>
+                
+            </ul>
+        </section> 
+        <section id="post-input"> 
+            <textarea id="postInput" placeholder="Type your message"></textarea>
+            <button onclick="createPost()"><i class="material-icons">send</i></button>
+        </section>
+
+        <footer>
+        </footer>
+ 
+        <section id="loginOverlay">
+            <div class="panel">
+                <input type="text" placeholder="Email"> <br><br>
+                <input type="text" placeholder="Password (coming soon)" disabled> <br><br>
+                <button id="loginButton">Login</button><button class="registerButton">Register</button>
+            </div>
+        </section>
+
+        <section id="registerOverlay">
+            <div class="panel">
+                <input type="text" placeholder="Email"> <br><br>
+                <input type="text" placeholder="Username"> <br><br>
+                <input type="text" placeholder="Password (coming soon)" disabled> <br><br>
+                <button id="registerButton">Register</button>
+            </div>
+        </section>
+    
+    </body>
+    <scripts> 
+        <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+        <script src="scripts/main.js"></script>
+        <script src="scripts/UI.js"></script>
+        <script src="scripts/socketLogic.js"></script>
+    </scripts>
+</html>
+
+
+<!-- 
+
+<div class="user">
+            <input id="logininput" type="text"><button onclick="login()">Login</button>  <button onclick="logout()">Logout</button> 
+            <input id="convoinput" type="text"><button onclick="openConvo()">Convo</button>  
+            <input id="chattoinput" type="text"><button onclick="chatTo()">Create Convo</button>
+            </div>
+            <section class="sidebar">
+                <ul id="conversation-list">
+                <li><b>Conversations</b></li> 
+                </ul>
+                <ul id="user-list">
+                <li><b>Users</b></li> 
+                </ul>
+            </section>
+            <ul id="messages"></ul>
+            <form action="">
+            <input  id="m" autocomplete="off" /><button type="button" onclick="sendMessage()">Send</button>
+            </form>
+
+
+-->
