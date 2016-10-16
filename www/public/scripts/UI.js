@@ -52,7 +52,7 @@ $('#loginOverlay').on('click', '.registerButton', function(event){
 
 $('#conversation-list').on('click', 'li', function(){
     $('#convoinput').val( $(this).attr('var') )
-    openConvo()
+    openConvo( $(this).attr('var') )
 })
 
 $('#user-list').on('click', 'li', function(){

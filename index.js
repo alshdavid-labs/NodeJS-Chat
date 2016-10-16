@@ -18,54 +18,67 @@ io.on('connection', function(socket){
 
     //AUTH ---------
     socket.on('auth', function(msg){
+        if(msg.email){
         accounts.loginUser(msg.email, socket.id).then( (res) => {
             io.to(socket.id).emit( "auth", { action : 'success', user : res } )  
         }).catch ( (res) => {
             io.to(socket.id).emit( "auth", { action : 'faliure', message : res.toString() } )
         })
+        } else {
+            console.log("BOUNCED:  auth")
+        }
     })
 
     //REGISTER ---------
     socket.on('reg', function(msg){
-        accounts.createUser(msg.email, msg.username, socket.id).then( (res) => 
-        {
-            io.to(socket.id).emit( "reg", { action : 'success', user : res } )
-            //tell front end to refresh -- for now 
-            io.emit('refresh');  
-        }).catch ( (res) => {
-            io.to(socket.id).emit( "reg", { action : 'faliure', message : res.toString() } )
-        })
+        if(msg.email && msg.username){
+            accounts.createUser(msg.email, msg.username, socket.id).then( (res) => 
+            {
+                io.to(socket.id).emit( "reg", { action : 'success', user : res } )
+                //tell front end to refresh -- for now 
+                io.emit('refresh');  
+            }).catch ( (res) => {
+                io.to(socket.id).emit( "reg", { action : 'faliure', message : res.toString() } )
+            })
+        } else {
+            console.log("BOUNCED:  registration")
+        }
     })
 
     //MESSAGE -------
     socket.on('msg', function(msg){
-        //console.log(msg)
-        conversation.newMessage(msg.fromUser, msg.toConvo, msg.message).then( (res) => {
-            //look through list of active socket sessions and send the message back out to them
-            for (let i = 0; i < res.length ; i++){
-                io.to(res[i]).emit( "msg", 
-                    { 
-                        action : 'new', 
-                        fromUser : msg.fromUser, 
-                        toConvo: msg.toConvo,  
-                        message : msg.message 
-                    }
-                )
-            }
-        }).catch(()=>{})
+        if(msg.fromUser && msg.toConvo && msg.message){
+            conversation.newMessage(msg.fromUser, msg.toConvo, msg.message).then( (res) => {
+                //look through list of active socket sessions and send the message back out to them
+                for (let i = 0; i < res.length ; i++){
+                    io.to(res[i]).emit( "msg", 
+                        { 
+                            action : 'new', 
+                            fromUser : msg.fromUser, 
+                            toConvo: msg.toConvo,  
+                            message : msg.message 
+                        }
+                    )
+                }
+            }).catch(()=>{})
+        } else {
+            console.log("BOUNCED:  message")
+        }
     })
-
 
     //CONVERSTION -------
     socket.on('convo', function(msg){
-        //console.log(msg)
-        conversation.create(socket.id, msg.fromUser, msg.toUsers).then((res)=>{
-            io.to(socket.id).emit( "convo", { action : "new", conversation : res } )
-            //tell front end to refresh -- for now 
-            io.emit('refresh'); 
-        }).catch((res)=>{
-            io.to(socket.id).emit( "error", { reason : res } )
-        })
+        if(msg.fromUser && msg.toUsers && (msg.toUsers.length > 0)){
+            conversation.create(socket.id, msg.fromUser, msg.toUsers).then((res)=>{
+                io.to(socket.id).emit( "convo", { action : "new", conversation : res } )
+                //tell front end to refresh -- for now 
+                io.emit('refresh'); 
+            }).catch((res)=>{
+                io.to(socket.id).emit( "error", { reason : res } )
+            })
+        } else {
+            console.log("BOUNCED:  convo")
+        }
     })
 
     //Session Killer ----
@@ -74,6 +87,10 @@ io.on('connection', function(socket){
         accounts.removeSession(socket.id);
     });
  
+});
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
 });
 
 //accounts.createUser('alshD2', 'alsh2')
@@ -92,16 +109,6 @@ io.on('connection', function(socket){
 //conversation.create([ "5801bfca42755d047e89e1a6", "5801bfca42755d047e89e1a9" ])
 
 //accounts.test()
-
-
-
-
-
-http.listen(3000, function(){
-  console.log('listening on *:3000');
-});
-
-
 
 
 

@@ -5,19 +5,20 @@
         auth = null
         conversations = null
         users = null
-        console.log(globalUsername)
+        //console.log(globalUsername)
         clearAll()
       }
       pageInit()  
 
-      function openConvo(){
-          currentConversation = $('#convoinput').val()
+      function openConvo(updateTo){
+          currentConversation = updateTo
           for (let i = 0; i < conversations.length; i++){
               if (conversations[i]._id == currentConversation){
                 renderConvo(conversations[i].messages, conversations[i].name)
                 return
               }
           }
+          console.log("current: " + currentConversation)
       }
 
       function chatTo(userList){

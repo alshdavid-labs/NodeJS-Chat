@@ -1,4 +1,6 @@
-var socket = io("sandbox.davidalsh.com:3000/");
+//var socket = io("sandbox.davidalsh.com:3000/");
+var socket = io("localhost:3000/");
+
 
 //SOCKETS ============================
 socket.on( "auth"  , function(msg){ //---------- Login
@@ -25,6 +27,8 @@ socket.on( "auth"  , function(msg){ //---------- Login
             console.log(auth)
             console.log(conversations)
             console.log(users)
+
+            console.log("current: " + currentConversation)
 
             break;  
         
@@ -103,7 +107,7 @@ function login(){
     socket.connect()
 
     email = globalUsername
-    console.log(globalUsername)
+    //console.log(globalUsername)
     socket.emit( "auth", { 'email' : email} ) // Move to sockets
     pageInit()
 }
