@@ -1,5 +1,5 @@
-//var socket = io("sandbox.davidalsh.com:3000/");
-var socket = io("localhost:3000/");
+var socket = io("sandbox.davidalsh.com:3000/");
+//var socket = io("localhost:3000/");
 
 
 //SOCKETS ============================
