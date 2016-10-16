@@ -214,9 +214,12 @@ $chat-input-height: 100px;
     background-color: rgba(0,0,0,0.4);
     z-index: 9999;
     visibility: hidden;
+    opacity: 0;
+    transition: all .25s;
 
     &.open {
         visibility: visible;
+        opacity: 1;
     }
 
     .panel {

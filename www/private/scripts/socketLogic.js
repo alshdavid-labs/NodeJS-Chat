@@ -1,4 +1,4 @@
-var socket = io("192.168.1.110:3000/");
+var socket = io("sandbox.davidalsh.com:3000/");
 
 //SOCKETS ============================
 socket.on( "auth"  , function(msg){ //---------- Login

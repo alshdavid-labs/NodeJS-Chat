@@ -63,19 +63,37 @@ $('#user-list').on('click', 'li', function(){
 
 $('#loginButton').on('click', function(event){
     event.stopPropagation();
-    globalUsername = $('#loginOverlay .email').val()
-    console.log(globalUsername)
-    login()
-    $('#loginOverlay').removeClass('open')
+    var checks = 0
+    if ($('#loginOverlay .email').val().length > 4){ checks = checks + 1 } else {
+        $('#loginOverlay .email').css("border", "1px red solid")
+    }
+
+    if (checks == 1){
+        globalUsername = $('#loginOverlay .email').val()
+        login()
+        $('#loginOverlay').removeClass('open')
+    }
 })
 
 $('#registerButton').on('click', function(event){
     event.stopPropagation();
+    var checks = 0
     var email = $('#registerOverlay .email').val()
-    var globalUsername = $('#registerOverlay .username').val()
+    var username = $('#registerOverlay .username').val()
     $('#loginOverlay .email').val(email)
-    registerUser(email, globalUsername)
-    $('#registerOverlay').removeClass('open')
+    
+    if (email.length > 4){ checks = checks + 1 } else {
+        $('#registerOverlay .email').css("border", "1px red solid")
+    }
+    if (username.length > 4){ checks = checks + 1 }  else {
+        $('#registerOverlay .username').css("border", "1px red solid")
+    }
+
+    if (checks == 2){
+        $('#registerOverlay').removeClass('open')
+        globalUsername = username
+        registerUser(email, globalUsername)
+    }
 })
 
 
