@@ -1,3 +1,8 @@
+ui = {
+    groupChat : {},
+    slideMenu : {},
+}
+
 $('html').click(function(){
     $('#slidemenu').removeClass('open')
     $('#registerOverlay').removeClass('open')
@@ -18,6 +23,22 @@ $('#slidemenu').on('click', 'li', function(event){
 $('#conversationDraw').on('click', 'h1', function(event){
     $('#conversationDraw').toggleClass('open')
 })
+
+
+$('#group-chat').on('click', 'h2', function(event){
+    ui.groupChat.button()
+})
+ui.groupChat['button'] = function(){
+    if ( $('#group-chat h2').attr('status') == 'active' ){
+        $('#group-chat h2').toggleClass('active')
+        $('#group-chat h2').html('Group Chat')
+        $('#group-chat h2').attr('status', '')
+    } else {
+        $('#group-chat h2').toggleClass('active')
+        $('#group-chat h2').html('Open')
+        $('#group-chat h2').attr('status', 'active')
+    }    
+}
 
 $('#conversationDraw').on('click', 'li', function(event){
     event.stopPropagation();
@@ -40,7 +61,9 @@ $('#loginOverlay').on('click', '.panel', function(event){
 
 $('.loggedout').on('click', function(event){
     event.stopPropagation();
-    $('#loginOverlay').addClass('open')
+    if ($('#slidemenu').attr('class') != "open"){
+        $('#loginOverlay').addClass('open')
+    }    
     $('#slidemenu').removeClass('open')
     $('#conversationDraw').removeClass('open')
 })
@@ -58,6 +81,7 @@ $('#conversation-list').on('click', 'li', function(){
 $('#user-list').on('click', 'li', function(){
     $('#slidemenu').removeClass('open')
     $('#conversationDraw').removeClass('open')
+    //ui.loader('open')
     chatTo( $(this).html() )
 })
 
@@ -70,7 +94,7 @@ $('#loginButton').on('click', function(event){
 
     if (checks == 1){
         globalUsername = $('#loginOverlay .email').val()
-        login()
+        loginLoud()
         $('#loginOverlay').removeClass('open')
     }
 })
@@ -96,6 +120,21 @@ $('#registerButton').on('click', function(event){
     }
 })
 
+ui['notification'] = function(err){
+    $('#notification').html(err)
+    $('#notification').addClass('active')
+    setTimeout(function(){
+        $('#notification').removeClass('active')
+    }, 2500)
+}
+
+ui['loader'] = function(action){
+    if (action == "open"){
+        $('#loader').addClass('open')
+    } else {
+        $('#loader').removeClass('open')
+    }
+}
 
 $(document).keypress(function(e) {
     if(e.which == 13) {

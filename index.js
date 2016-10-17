@@ -22,7 +22,7 @@ io.on('connection', function(socket){
         accounts.loginUser(msg.email, socket.id).then( (res) => {
             io.to(socket.id).emit( "auth", { action : 'success', user : res } )  
         }).catch ( (res) => {
-            io.to(socket.id).emit( "auth", { action : 'faliure', message : res.toString() } )
+            io.to(socket.id).emit( "auth", { action : 'failure', message : res.toString() } )
         })
         } else {
             console.log("BOUNCED:  auth")
@@ -74,10 +74,23 @@ io.on('connection', function(socket){
                 //tell front end to refresh -- for now 
                 io.emit('refresh'); 
             }).catch((res)=>{
-                io.to(socket.id).emit( "error", { reason : res } )
+                io.to(socket.id).emit( "convo", { action : "failure", conversation : res } )
             })
         } else {
             console.log("BOUNCED:  convo")
+        }
+    })
+
+    //REFRESH ---------
+    socket.on('authrefresh', function(msg){
+        if(msg.email){
+        accounts.loginUser(msg.email, socket.id).then( (res) => {
+            io.to(socket.id).emit( "authrefresh", { action : 'success', user : res } )  
+        }).catch ( (res) => {
+            io.to(socket.id).emit( "authrefresh", { action : 'failure', message : res.toString() } )
+        })
+        } else {
+            console.log("BOUNCED:  auth")
         }
     })
 

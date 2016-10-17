@@ -1,48 +1,73 @@
-//var socket = io("sandbox.davidalsh.com:3000/");
-var socket = io("localhost:3000/");
+var socket = io("sandbox.davidalsh.com:3000/");
+//var socket = io("localhost:3000/");
+var data = {}
 
+data['init'] = function(msg) {
+    ui.loader('close')
+    pageInit()
+    auth = msg.user.account
+    conversations = msg.user.conversations
+    users = msg.user.users
+
+    populateUserList()
+    populateConvoList()
+    if (conversations.length > 0){
+        renderConvo(conversations[0].messages, conversations[0].name)
+        currentConversation = conversations[0]._id
+    } else {
+        $('#header h1').html("No Convos") 
+    }
+    removeLogin()
+    loggedInState = true
+}
 
 //SOCKETS ============================
 socket.on( "auth"  , function(msg){ //---------- Login
     switch (msg.action) { 
 
         case 'success':
-            pageInit()
-            auth = msg.user.account
-            conversations = msg.user.conversations
-            users = msg.user.users
-
-            populateUserList()
-            populateConvoList()
-            if (conversations.length > 0){
-                renderConvo(conversations[0].messages, conversations[0].name)
-                currentConversation = conversations[0]._id
-            } else {
-                $('#header h1').html("No Convos") 
-            }
-            removeLogin()
-            loggedInState = true
-            console.log("==============") 
+            data.init(msg)
+            ui.notification("Logged in")
             console.log("====Login====") 
             console.log(auth)
-            console.log("_____________") 
-            console.log("Conversations") 
             console.log(conversations)
-            console.log("_____") 
-            console.log("Users") 
             console.log(users)
             console.log("==============") 
-            console.log("==============") 
             console.log("") 
-
-            //console.log("current: " + currentConversation)
-
             break;  
         
         case 'failure':
+            ui.loader('close')
+            ui.notification("Invalid User")
             console.log('bad credentials')
             break;
     }
+})
+
+socket.on( "authrefresh"  , function(msg){ //---------- Login
+    switch (msg.action) { 
+
+        case 'success':
+            data.init(msg)
+            //ui.notification("Logged in")
+            console.log("====Refresh====") 
+            console.log(auth)
+            console.log(conversations)
+            console.log(users)
+            console.log("==============") 
+            console.log("") 
+            break;  
+        
+        case 'failure':
+            ui.loader('close')
+            ui.notification("Invalid User")
+            console.log('bad credentials')
+            break;
+    }
+})
+
+socket.on('refresh', function(msg){ // ------------------on refresh signal
+    authRefresh()
 })
     
 socket.on('msg', function(msg){ //----------On new message
@@ -58,22 +83,23 @@ socket.on('msg', function(msg){ //----------On new message
 });
 
 socket.on('convo', function(msg){ // ------------------on new convo
-    login()
-})
-
-socket.on('refresh', function(msg){ // ------------------on refresh signal
-    
-    if (loggedInState == true) {
-        console.log("==============")
-        console.log('refresh')
-        login()
-        console.log("==============")
-        console.log("") 
+    switch (msg.action){
+        case "success":
+            ui.notification("Conversation Created")            
+            break;
+        
+        case "failure":
+            ui.notification("Conversation Already Exists")
+            ui.loader('close')
+            break;
     }
 })
 
+
+
 socket.on('error', function(msg){ // ------------------on error
     console.log(msg)
+    ui.notification(msg)
 })
 
 socket.on('disconnect', function(){
@@ -101,6 +127,7 @@ function sendMessage(){  //--- Send Message
 }
 
 function socketCreateConvo(fromID, toIDs){  //--- Create Convo
+    ui.loader('open')
     var data = {
         fromUser : fromID,
         toUsers : toIDs
@@ -124,14 +151,30 @@ function registerUser(email, username){
     socket.emit('reg', data);
     console.log("==============") 
     console.log("") 
+    ui.notification("User Registered")
 }
 
 function login(){
     socket.disconnect();
     socket.connect()
-
     email = globalUsername
-    //console.log(globalUsername)
+    socket.emit( "auth", { 'email' : email} ) // Move to sockets
+    pageInit()
+}
+
+function authRefresh(){
+    socket.disconnect();
+    socket.connect()
+    email = globalUsername
+    socket.emit( "authrefresh", { 'email' : email} ) // Move to sockets
+    pageInit()
+}
+
+function loginLoud(){
+    ui.loader('open')
+    socket.disconnect();
+    socket.connect()
+    email = globalUsername
     socket.emit( "auth", { 'email' : email} ) // Move to sockets
     pageInit()
 }

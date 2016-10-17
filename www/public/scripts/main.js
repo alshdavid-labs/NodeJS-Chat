@@ -5,7 +5,6 @@
         auth = null
         conversations = null
         users = null
-        //console.log(globalUsername)
         clearAll()
       }
       pageInit()  
@@ -25,8 +24,6 @@
         var id = getIdFromName(userList)        
         //console.log(id)
         socketCreateConvo(auth._id, [id])
-        clearAll()
-        login()
       }
       
       
