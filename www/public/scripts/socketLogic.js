@@ -1,5 +1,5 @@
-var socket = io("sandbox.davidalsh.com:3000/");
-//var socket = io("localhost:3000/");
+//var socket = io("sandbox.davidalsh.com:3000/");
+var socket = io("localhost:3000/");
 
 
 //SOCKETS ============================
@@ -7,7 +7,6 @@ socket.on( "auth"  , function(msg){ //---------- Login
     switch (msg.action) { 
 
         case 'success':
-            console.log('logged in')
             pageInit()
             auth = msg.user.account
             conversations = msg.user.conversations
@@ -23,12 +22,20 @@ socket.on( "auth"  , function(msg){ //---------- Login
             }
             removeLogin()
             loggedInState = true
-            
+            console.log("==============") 
+            console.log("====Login====") 
             console.log(auth)
+            console.log("_____________") 
+            console.log("Conversations") 
             console.log(conversations)
+            console.log("_____") 
+            console.log("Users") 
             console.log(users)
+            console.log("==============") 
+            console.log("==============") 
+            console.log("") 
 
-            console.log("current: " + currentConversation)
+            //console.log("current: " + currentConversation)
 
             break;  
         
@@ -55,9 +62,13 @@ socket.on('convo', function(msg){ // ------------------on new convo
 })
 
 socket.on('refresh', function(msg){ // ------------------on refresh signal
-    console.log('refresh')
+    
     if (loggedInState == true) {
+        console.log("==============")
+        console.log('refresh')
         login()
+        console.log("==============")
+        console.log("") 
     }
 })
 
@@ -77,8 +88,12 @@ function sendMessage(){  //--- Send Message
         message : $('#m').val()
     }       
     if ($('#m').val().length > 0){
+        console.log("==============") 
+        console.log("Sending Msg") 
         console.log(letter)
         socket.emit('msg', letter);
+        console.log("==============") 
+        console.log("") 
         $('#m').val('');
     } else {
         console.log('Enter Something')
@@ -89,8 +104,13 @@ function socketCreateConvo(fromID, toIDs){  //--- Create Convo
     var data = {
         fromUser : fromID,
         toUsers : toIDs
-    }       
+    }   
+    console.log("==============") 
+    console.log("Creating Convo")    
+    console.log(data)
     socket.emit('convo', data);
+    console.log("==============") 
+    console.log("") 
 }
 
 function registerUser(email, username){
@@ -98,8 +118,12 @@ function registerUser(email, username){
         'email' : email,
         'username' : username
     }
+    console.log("==============") 
+    console.log("Reg Usr") 
     console.log(data)
     socket.emit('reg', data);
+    console.log("==============") 
+    console.log("") 
 }
 
 function login(){

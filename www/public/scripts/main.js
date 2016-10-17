@@ -23,7 +23,7 @@
 
       function chatTo(userList){
         var id = getIdFromName(userList)        
-        console.log(id)
+        //console.log(id)
         socketCreateConvo(auth._id, [id])
         clearAll()
         login()
