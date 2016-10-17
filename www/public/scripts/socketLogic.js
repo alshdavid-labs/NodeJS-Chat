@@ -103,7 +103,7 @@ socket.on('error', function(msg){ // ------------------on error
 })
 
 socket.on('disconnect', function(){
-    showLogin()
+    //showLogin()
     loggedInState = false
 })
 

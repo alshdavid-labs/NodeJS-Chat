@@ -31,6 +31,10 @@ $chat-input-height: 100px;
     top: 0;
     height: $header-height;
     z-index: 98;
+    @include mappy-bp(1024px){
+        right: 300px;
+    }
+    
 
     h1 {
         position: absolute;
@@ -54,6 +58,9 @@ $chat-input-height: 100px;
         color: white;
         font-size: 35px;
         transition: all .25s;
+        @include mappy-bp(1024px){
+            display: none;
+        }
 
         &:active{opacity: .7; transition: all 0s;}
     }
@@ -70,6 +77,12 @@ $chat-input-height: 100px;
     box-shadow: 10px 0px 48px -16px rgba(0,0,0,0.55);
     transition: all .25s;
     z-index: 9999;
+
+    @include mappy-bp(1024px){
+        right: 0;
+        width: 300px;
+    }
+
     &.open{
         right: 0;
     }
@@ -77,17 +90,22 @@ $chat-input-height: 100px;
     h1, h2 {
         text-align: center;
         font-weight: 100;
+        
         line-height: 60px;
         border-bottom: #eee solid 1px;
     }
 
     li {
         padding-left: 40px;
+        cursor: pointer;
         font-weight: 100;
         line-height: 50px;
         transition: all .25s;
+        &:hover {
+            background-color: #eee
+        }
         &:active {
-            background-color: #eee;
+            background-color: #e0e0e0;
             transition: all 0s; 
         }
     }
@@ -106,6 +124,7 @@ $chat-input-height: 100px;
         h1 {
             transition: all .25s;
             background-color: $color-2;
+            cursor: pointer;
             color: black;
             &:active {                
                 transition: all 0s; 
@@ -123,6 +142,7 @@ $chat-input-height: 100px;
         bottom: 0;
         left: 0;
         right:0;
+        
         color: white;
         border-top: #eee solid 1px;
         border-bottom: none;
@@ -132,6 +152,7 @@ $chat-input-height: 100px;
             transition: all .25s;
             background-color: $color-1;
             color: white;
+            cursor: pointer;
             &:active {                
                 transition: all 0s; 
             }
@@ -152,7 +173,11 @@ $chat-input-height: 100px;
     left: 0;
     right: 0;
     text-align: center;
+    cursor: pointer;
     color: #BDBDBD;
+    @include mappy-bp(1024px){
+        right: 300px;
+    }
     span {
         position: absolute;
         left: 50%;
@@ -169,6 +194,12 @@ $chat-input-height: 100px;
     bottom: $chat-input-height;
     right: 0;
     overflow-y: scroll;
+    @include mappy-bp(1024px){
+        right: 300px;
+    }
+    &::-webkit-scrollbar { 
+        display: none; 
+    }
 
     li {
         margin: 10px 20px 5px 20px;;
@@ -194,6 +225,9 @@ $chat-input-height: 100px;
     right: 0;
     height: $chat-input-height;
     background: white;
+    @include mappy-bp(1024px){
+        right: 300px;
+    }
 
     textarea {
         padding: 15px;
@@ -283,6 +317,8 @@ $chat-input-height: 100px;
     }
 }
 
+
+
 #loader {
     z-index: 99999;
     position: fixed;
@@ -324,6 +360,9 @@ $chat-input-height: 100px;
     border-radius: 15px;
     visibility: hidden;
     opacity: 0;
+    @include mappy-bp(1024px){
+        right: 300px;
+    }
 
     &.active {
         animation: kf_notification 2s forwards;
