@@ -106,22 +106,10 @@ http.listen(3000, function(){
   console.log('listening on *:3000');
 });
 
-//accounts.createUser('alshD2', 'alsh2')
-
-//conversation.sendMessage()
-
-//accounts.dbTest().then( function(reason){} );
-
-// accounts.loginUser("david", "dsad2324da").then(
-//     (res) => {
-//         console.log(res)
-//     }
-// )
-
-//conversation.create([ "5801bfca42755d047e89e1a6", "5801bfca42755d047e89e1a8" ])
-//conversation.create([ "5801bfca42755d047e89e1a6", "5801bfca42755d047e89e1a9" ])
-
-//accounts.test()
+accounts.loginUser("asdasd", "adssd")
+.catch( res => {
+    console.log("BOUNCED:  Invalid User Format");
+})
 
 
 
