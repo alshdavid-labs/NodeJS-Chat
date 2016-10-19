@@ -62,23 +62,27 @@ io.on('connection', function(socket){
 
     //MESSAGE -------
     socket.on('msg', function(msg){
-        if(msg.fromUser && msg.toConvo && msg.message){
-            conversation.newMessage(msg.fromUser, msg.toConvo, msg.message).then( (res) => {
-                //look through list of active socket sessions and send the message back out to them
-                for (let i = 0; i < res.length ; i++){
-                    io.to(res[i]).emit( "msg", 
-                        { 
-                            action : 'new', 
-                            fromUser : msg.fromUser, 
-                            toConvo: msg.toConvo,  
-                            message : msg.message 
-                        }
-                    )
-                }
-            }).catch(()=>{})
-        } else {
-            console.log("BOUNCED:  message")
-        }
+        if(!msg.fromUser || !msg.toConvo || !msg.message){ console.log("BOUNCED:  message"); return }
+        
+        co(function *() {
+            try 
+            {
+                var response = yield conversation.newMessage(msg.fromUser, msg.toConvo, msg.message)
+                emitToArray(response)
+            } 
+            catch (err) 
+            {
+
+            }            
+        })
+            
+        function emitToArray(sockets){
+            for (let i = 0; i < sockets.length ; i++){
+                var message = { action : 'new', fromUser : msg.fromUser, toConvo: msg.toConvo, message : msg.message }
+                io.to(sockets[i]).emit( "msg", message)
+            }
+        }        
+
     })
 
     //CONVERSTION -------
