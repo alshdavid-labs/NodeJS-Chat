@@ -18,15 +18,20 @@ io.on('connection', function(socket){
         if(!msg.email){ console.log("BOUNCED:  auth"); }
         
         co(function *(){
-            var sessionData = yield accounts.loginUser(msg.email, socket.id)
-            responder( { 'action' : 'success', 'user' : sessionData } )
-        }).catch ( 
-            (res) => {
-            responder( { 'action' : 'failure', 'message' : res } )
+            try 
+            {
+                var sessionData = yield accounts.loginUser(msg.email, socket.id)
+                responder ( { 'action' : 'success', 'user' : sessionData } )
+            } 
+            catch(err) 
+            {   
+                responder( { 'action' : 'failure', 'message' : err } )
+            }
         })
 
+        //comunication portal
         function responder(message){
-            io.socket(socket.id).emit("auth", message)
+            io.to(socket.id).emit("auth", message)
         }
     })
 
@@ -107,10 +112,7 @@ http.listen(3000, function(){
   console.log('listening on *:3000');
 });
 
-accounts.loginUser("asdasd", "adssd")
-.catch( res => {
-    console.log("BOUNCED:  Invalid User Format");
-})
+
 
 
 
