@@ -1,7 +1,4 @@
-//var Conversation = require('./conversation')
-//var newConvo = new Conversation(1, ['john', 'steve'])
-//newConvo.addMessage('steve', 'sdasdadsasd')
-//console.log(newConvo.getMessages())
+var co = require('co');
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -18,14 +15,18 @@ io.on('connection', function(socket){
 
     //AUTH ---------
     socket.on('auth', function(msg){
-        if(msg.email){
-        accounts.loginUser(msg.email, socket.id).then( (res) => {
-            io.to(socket.id).emit( "auth", { action : 'success', user : res } )  
-        }).catch ( (res) => {
-            io.to(socket.id).emit( "auth", { action : 'failure', message : res.toString() } )
+        if(!msg.email){ console.log("BOUNCED:  auth"); }
+        
+        co(function *(){
+            var sessionData = yield accounts.loginUser(msg.email, socket.id)
+            responder( { 'action' : 'success', 'user' : sessionData } )
+        }).catch ( 
+            (res) => {
+            responder( { 'action' : 'failure', 'message' : res } )
         })
-        } else {
-            console.log("BOUNCED:  auth")
+
+        function responder(message){
+            io.socket(socket.id).emit("auth", message)
         }
     })
 
