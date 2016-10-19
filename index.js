@@ -25,6 +25,7 @@ io.on('connection', function(socket){
             } 
             catch(err) 
             {   
+                console.log(err)
                 responder( { 'action' : 'failure', 'message' : err } )
             }
         })
