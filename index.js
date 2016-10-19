@@ -15,7 +15,7 @@ io.on('connection', function(socket){
 
     //AUTH ---------
     socket.on('auth', function(msg){
-        if(!msg.email){ console.log("BOUNCED:  auth"); return }
+        if(!msg.email){ console.log("BOUNCED:  auth input"); return }
         
         co(function *() {
             try 
@@ -37,7 +37,7 @@ io.on('connection', function(socket){
 
     //REGISTER ---------
     socket.on('reg', function(msg){
-        if(!msg.email || !msg.username){ console.log("BOUNCED:  registration"); return }
+        if(!msg.email || !msg.username){ console.log("BOUNCED:  registration input"); return }
 
         co(function *() {
             try
