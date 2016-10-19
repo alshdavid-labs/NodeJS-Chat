@@ -15,9 +15,9 @@ io.on('connection', function(socket){
 
     //AUTH ---------
     socket.on('auth', function(msg){
-        if(!msg.email){ console.log("BOUNCED:  auth"); }
+        if(!msg.email){ console.log("BOUNCED:  auth"); return }
         
-        co(function *(){
+        co(function *() {
             try 
             {
                 var sessionData = yield accounts.loginUser(msg.email, socket.id)
@@ -37,17 +37,26 @@ io.on('connection', function(socket){
 
     //REGISTER ---------
     socket.on('reg', function(msg){
-        if(msg.email && msg.username){
-            accounts.createUser(msg.email, msg.username, socket.id).then( (res) => 
+        if(!msg.email || !msg.username){ console.log("BOUNCED:  registration"); return }
+
+        co(function *() {
+            try
             {
-                io.to(socket.id).emit( "reg", { action : 'success', user : res } )
-                //tell front end to refresh -- for now 
+                var response = yield accounts.createUser(msg.email, msg.username, socket.id)
+                responder ( { action : 'success', user : res } )
+                
+                //for now use this to refresh all clients
                 io.emit('refresh');  
-            }).catch ( (res) => {
-                io.to(socket.id).emit( "reg", { action : 'faliure', message : res.toString() } )
-            })
-        } else {
-            console.log("BOUNCED:  registration")
+            }
+            catch (err)
+            {
+                responder ( { action : 'faliure', message : err } )
+            }
+        })
+
+        //comunication portal
+        function responder(message){
+            io.to(socket.id).emit("reg", message)
         }
     })
 
